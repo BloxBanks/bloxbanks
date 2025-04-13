@@ -124,7 +124,10 @@
       <a href="#leaderboard">Leaderboard</a>
       <a href="#rewards">Rewards</a>
     </nav>
-    <button class="login-button" onclick="login()">Log In</button>
+    <div>
+      <span id="user-display" style="margin-right: 15px;"></span>
+      <button class="login-button" onclick="login()">Log In</button>
+    </div>
   </header>
 
   <div class="main">
@@ -147,16 +150,31 @@
   <script>
     let balance = 100;
     let loggedIn = false;
+    let currentUser = localStorage.getItem('blox_user');
+
+    if (currentUser) {
+      loggedIn = true;
+      document.getElementById("user-display").textContent = `Logged in as ${currentUser}`;
+    }
 
     function login() {
       if (!loggedIn) {
         const username = prompt("Enter your username:");
-        if (username) {
-          alert("Welcome, " + username + "! You're now logged in.");
+        const password = prompt("Enter your password:");
+
+        if (username && password) {
+          // For demo: store credentials (not secure in real life!)
+          localStorage.setItem('blox_user', username);
+          localStorage.setItem('blox_pass', password);
+
+          alert(`Welcome, ${username}! You're now logged in.`);
           loggedIn = true;
+          document.getElementById("user-display").textContent = `Logged in as ${username}`;
+        } else {
+          alert("Username and password required!");
         }
       } else {
-        alert("You're already logged in.");
+        alert("You're already logged in as " + localStorage.getItem('blox_user'));
       }
     }
 
