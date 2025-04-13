@@ -41,7 +41,7 @@
       color: #00ffc8;
     }
 
-    .login-button {
+    .login-button, .deposit-button {
       background-color: #00ffc8;
       color: #0d0d0d;
       border: none;
@@ -49,9 +49,10 @@
       border-radius: 8px;
       cursor: pointer;
       transition: background 0.3s ease;
+      margin-left: 10px;
     }
 
-    .login-button:hover {
+    .login-button:hover, .deposit-button:hover {
       background-color: #00ccb3;
     }
 
@@ -106,6 +107,37 @@
       font-size: 20px;
     }
 
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #1f1f1f;
+      padding: 30px;
+      border-radius: 15px;
+      z-index: 1000;
+      box-shadow: 0 0 20px rgba(0, 255, 200, 0.2);
+      text-align: center;
+    }
+
+    .popup button {
+      display: block;
+      width: 100%;
+      margin: 10px auto;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 999;
+    }
+
     footer {
       margin-top: 60px;
       text-align: center;
@@ -116,6 +148,15 @@
   </style>
 </head>
 <body>
+  <div class="overlay" id="overlay" onclick="closePopup()"></div>
+  <div class="popup" id="depositPopup">
+    <h3>Choose Your Deposit Method</h3>
+    <button onclick="selectCrypto('Bitcoin')">Bitcoin</button>
+    <button onclick="selectCrypto('Litecoin')">Litecoin</button>
+    <button onclick="selectCrypto('Ethereum')">Ethereum</button>
+    <p id="cryptoResult"></p>
+  </div>
+
   <header>
     <div class="logo">BloxBanks</div>
     <nav>
@@ -127,6 +168,7 @@
     <div>
       <span id="user-display" style="margin-right: 15px;"></span>
       <button class="login-button" id="loginBtn" onclick="login()">Log In</button>
+      <button class="deposit-button" onclick="openPopup()">Deposit</button>
     </div>
   </header>
 
@@ -148,14 +190,8 @@
   </footer>
 
   <script>
-    let balance = localStorage.getItem('blox_balance')
-      ? parseInt(localStorage.getItem('blox_balance'))
-      : 100;
-
-    let totalWinnings = localStorage.getItem('blox_winnings')
-      ? parseInt(localStorage.getItem('blox_winnings'))
-      : 0;
-
+    let balance = 100;
+    let totalWinnings = 0;
     let loggedIn = false;
     let maxWinnings = 130;
     const currentUser = localStorage.getItem('blox_user');
@@ -215,11 +251,31 @@
         message = `💀 You lost! It was ${outcome}. (-10 BLOX)`;
       }
 
-      localStorage.setItem('blox_balance', balance);
-      localStorage.setItem('blox_winnings', totalWinnings);
-
       document.getElementById('balance').textContent = balance;
       document.getElementById('result').textContent = message;
+    }
+
+    function openPopup() {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('depositPopup').style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('depositPopup').style.display = 'none';
+      document.getElementById('cryptoResult').textContent = '';
+    }
+
+    function selectCrypto(coin) {
+      let message = "";
+      if (coin === "Litecoin") {
+        message = `Send Litecoin to:<br><strong>LVSGSU5WNVeSa97pxsiekYtiYf3eRQPN1z</strong><br><br>`;
+        message += `1 BLOX = $0.10<br>`;
+        message += `Example: 1 LTC ≈ $90 → 900 BLOX`;
+      } else {
+        message = `${coin} deposit selected! (Feature coming soon)`;
+      }
+      document.getElementById('cryptoResult').innerHTML = message;
     }
   </script>
 </body>
