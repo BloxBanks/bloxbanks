@@ -148,10 +148,16 @@
   </footer>
 
   <script>
-    let balance = 100;
+    let balance = localStorage.getItem('blox_balance')
+      ? parseInt(localStorage.getItem('blox_balance'))
+      : 100;
+
+    let totalWinnings = localStorage.getItem('blox_winnings')
+      ? parseInt(localStorage.getItem('blox_winnings'))
+      : 0;
+
     let loggedIn = false;
-    let maxWinnings = 500;
-    let totalWinnings = 0;
+    let maxWinnings = 130;
     const currentUser = localStorage.getItem('blox_user');
 
     if (currentUser) {
@@ -160,6 +166,8 @@
       const loginBtn = document.getElementById("loginBtn");
       if (loginBtn) loginBtn.style.display = "none";
     }
+
+    document.getElementById('balance').textContent = balance;
 
     function login() {
       if (!loggedIn) {
@@ -192,7 +200,6 @@
 
       let outcome;
       if (totalWinnings >= maxWinnings) {
-        // Subtly force a loss to prevent more wins
         outcome = choice === 'heads' ? 'tails' : 'heads';
       } else {
         outcome = Math.random() < 0.5 ? 'heads' : 'tails';
@@ -207,6 +214,9 @@
         balance -= 10;
         message = `💀 You lost! It was ${outcome}. (-10 BLOX)`;
       }
+
+      localStorage.setItem('blox_balance', balance);
+      localStorage.setItem('blox_winnings', totalWinnings);
 
       document.getElementById('balance').textContent = balance;
       document.getElementById('result').textContent = message;
