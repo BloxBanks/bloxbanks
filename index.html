@@ -1,115 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BloxBanks</title>
-  <style>
-    body {
-      background-color: #1d1f20; /* Dark gray background similar to Stake */
-      color: lightgreen;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-
-  
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
   <meta charset="UTF-8" />
-  <title>BloxBanks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BloxBanks - Roblox Crypto Gambling</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #1d1f20;
+      background-color: #0d0d0d;
       color: #fff;
     }
 
     header {
       background-color: #121212;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 70px;
-      z-index: 999;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 10px 30px;
+      align-items: center;
+      padding: 20px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+      position: sticky;
+      top: 0;
+      z-index: 999;
     }
 
-    .logo img {
-      height: 50px;
+    .logo {
+      font-size: 24px;
+      color: #00ffc8;
+      font-weight: bold;
     }
 
     nav a {
-      color: white;
-      text-decoration: none;
       margin: 0 15px;
-      font-size: 16px;
+      text-decoration: none;
+      color: #ccc;
       transition: 0.3s;
     }
 
     nav a:hover {
-      color: #e29920;
+      color: #00ffc8;
     }
 
     .login-button {
-      background-color: #e29920;
-      color: black;
+      background-color: #00ffc8;
+      color: #0d0d0d;
       border: none;
       padding: 10px 20px;
-      font-weight: bold;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     .login-button:hover {
-      background-color: #f0ad35;
+      background-color: #00ccb3;
     }
 
-    .content {
-      padding-top: 90px;
+    .main {
+      padding: 100px 20px 40px;
       text-align: center;
     }
 
-    .content h1 {
+    .main h1 {
+      color: #00ffc8;
       font-size: 3em;
-      margin-bottom: 10px;
     }
 
-    .content p {
+    .main p {
       font-size: 1.2em;
+      color: #bbb;
+    }
+
+    .game-area {
+      background-color: #1a1a1a;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0, 255, 200, 0.1);
+    }
+
+    .balance {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #00ffc8;
+    }
+
+    button {
+      padding: 10px 25px;
+      margin: 10px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #00ffc8;
+      color: #0d0d0d;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00ccb3;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      padding: 20px;
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">
-      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVUAAAGbCAYAAAB07gPqAAAACXBIWXMAAC4jAAAuIwF4pT92AAAgAElEQVR4nOy9CXgb5bX/f97RyHLsJFZWICGxsq/EChS4LUsEtJRCS0yBwo8uVv5wL7QUYkpZ0gIxW4ECjVJKgVu4cXpve1sKrUML7YULOJcWypLETkL2RU4gZI/tJI4lzcz7f97ZNJK1jkbSSDqfJ4pmRqPRO2PNV+c97znnJZRSQBAEQayBw+uIIAhiHSiqCIIgFoKiiiAIYiEoqgiCIBaCooogCGIh..." alt="BloxBanks Logo" />
-    </div>
+    <div class="logo">BloxBanks</div>
     <nav>
       <a href="#">Home</a>
-      <a href="#">Games</a>
-      <a href="#">Promotions</a>
-      <a href="#">Support</a>
+      <a href="#game">Games</a>
+      <a href="#leaderboard">Leaderboard</a>
+      <a href="#rewards">Rewards</a>
     </nav>
-    <div class="login">
-      <button class="login-button">Log In</button>
-    </div>
+    <button class="login-button" onclick="login()">Log In</button>
   </header>
 
-  <div class="content">
+  <div class="main">
     <h1>Welcome to BloxBanks</h1>
-    <p>Start playing and win big!</p>
+    <p>Your favorite crypto-style Roblox gambling experience</p>
+
+    <div class="game-area" id="game">
+      <h2>Coin Flip</h2>
+      <div class="balance">Balance: <span id="balance">100</span> BLOX</div>
+      <button onclick="flip('heads')">Bet 10 on Heads</button>
+      <button onclick="flip('tails')">Bet 10 on Tails</button>
+      <div class="result" id="result"></div>
+    </div>
   </div>
+
+  <footer>
+    &copy; 2025 BloxBanks. All rights reserved. Site is for entertainment only.
+  </footer>
+
+  <script>
+    let balance = 100;
+    let loggedIn = false;
+
+    function login() {
+      if (!loggedIn) {
+        const username = prompt("Enter your username:");
+        if (username) {
+          alert("Welcome, " + username + "! You're now logged in.");
+          loggedIn = true;
+        }
+      } else {
+        alert("You're already logged in.");
+      }
+    }
+
+    function flip(choice) {
+      if (!loggedIn) {
+        document.getElementById('result').textContent = "Please log in first!";
+        return;
+      }
+
+      if (balance < 10) {
+        document.getElementById('result').textContent = "Not enough BLOX!";
+        return;
+      }
+
+      const outcome = Math.random() < 0.5 ? 'heads' : 'tails';
+      let message = '';
+
+      if (choice === outcome) {
+        balance += 10;
+        message = `🎉 You won! It was ${outcome}. (+10 BLOX)`;
+      } else {
+        balance -= 10;
+        message = `💀 You lost! It was ${outcome}. (-10 BLOX)`;
+      }
+
+      document.getElementById('balance').textContent = balance;
+      document.getElementById('result').textContent = message;
+    }
+  </script>
 </body>
 </html>
