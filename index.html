@@ -66,11 +66,6 @@
       font-size: 3em;
     }
 
-    .main p {
-      font-size: 1.2em;
-      color: #bbb;
-    }
-
     .game-area {
       background-color: #1a1a1a;
       max-width: 600px;
@@ -78,28 +73,6 @@
       padding: 30px;
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(0, 255, 200, 0.1);
-    }
-
-    .balance {
-      font-size: 22px;
-      margin-bottom: 20px;
-      color: #00ffc8;
-    }
-
-    button {
-      padding: 10px 25px;
-      margin: 10px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background-color: #00ffc8;
-      color: #0d0d0d;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background-color: #00ccb3;
     }
 
     .result {
@@ -119,12 +92,6 @@
       z-index: 1000;
       box-shadow: 0 0 20px rgba(0, 255, 200, 0.2);
       text-align: center;
-    }
-
-    .popup button {
-      display: block;
-      width: 100%;
-      margin: 10px auto;
     }
 
     .overlay {
@@ -155,6 +122,7 @@
     <button onclick="selectCrypto('Litecoin')">Litecoin</button>
     <button onclick="selectCrypto('Ethereum')">Ethereum</button>
     <p id="cryptoResult"></p>
+    <button onclick="closePopup()">Close</button>
   </div>
 
   <header>
@@ -166,7 +134,6 @@
       <a href="#rewards">Rewards</a>
     </nav>
     <div>
-      <span id="user-display" style="margin-right: 15px;"></span>
       <button class="login-button" id="loginBtn" onclick="login()">Log In</button>
       <button class="deposit-button" onclick="openPopup()">Deposit</button>
     </div>
@@ -178,32 +145,18 @@
 
     <div class="game-area" id="game">
       <h2>Coin Flip</h2>
-      <div class="balance">Balance: <span id="balance">100</span> BLOX</div>
+      <div class="result" id="result"></div>
       <button onclick="flip('heads')">Bet 10 on Heads</button>
       <button onclick="flip('tails')">Bet 10 on Tails</button>
-      <div class="result" id="result"></div>
     </div>
   </div>
 
   <footer>
-    &copy; 2025 BloxBanks. All rights reserved. Site is for entertainment only.
+    © 2025 BloxBanks. All rights reserved. Site is for entertainment only.
   </footer>
 
   <script>
-    let balance = 100;
-    let totalWinnings = 0;
     let loggedIn = false;
-    let maxWinnings = 130;
-    const currentUser = localStorage.getItem('blox_user');
-
-    if (currentUser) {
-      loggedIn = true;
-      document.getElementById("user-display").textContent = `Logged in as ${currentUser}`;
-      const loginBtn = document.getElementById("loginBtn");
-      if (loginBtn) loginBtn.style.display = "none";
-    }
-
-    document.getElementById('balance').textContent = balance;
 
     function login() {
       if (!loggedIn) {
@@ -211,48 +164,12 @@
         const password = prompt("Enter your password:");
 
         if (username && password) {
-          localStorage.setItem('blox_user', username);
-          localStorage.setItem('blox_pass', password);
           alert(`Welcome, ${username}! You're now logged in.`);
           loggedIn = true;
-          document.getElementById("user-display").textContent = `Logged in as ${username}`;
-          document.getElementById("loginBtn").style.display = "none";
         } else {
           alert("Username and password required!");
         }
       }
-    }
-
-    function flip(choice) {
-      if (!loggedIn) {
-        document.getElementById('result').textContent = "Please log in first!";
-        return;
-      }
-
-      if (balance < 10) {
-        document.getElementById('result').textContent = "Not enough BLOX!";
-        return;
-      }
-
-      let outcome;
-      if (totalWinnings >= maxWinnings) {
-        outcome = choice === 'heads' ? 'tails' : 'heads';
-      } else {
-        outcome = Math.random() < 0.5 ? 'heads' : 'tails';
-      }
-
-      let message = '';
-      if (choice === outcome) {
-        balance += 10;
-        totalWinnings += 10;
-        message = `🎉 You won! It was ${outcome}. (+10 BLOX)`;
-      } else {
-        balance -= 10;
-        message = `💀 You lost! It was ${outcome}. (-10 BLOX)`;
-      }
-
-      document.getElementById('balance').textContent = balance;
-      document.getElementById('result').textContent = message;
     }
 
     function openPopup() {
@@ -272,10 +189,29 @@
         message = `Send Litecoin to:<br><strong>LVSGSU5WNVeSa97pxsiekYtiYf3eRQPN1z</strong><br><br>`;
         message += `1 BLOX = $0.10<br>`;
         message += `Example: 1 LTC ≈ $90 → 900 BLOX`;
+      } else if (coin === "Bitcoin") {
+        message = `Send Bitcoin to:<br><strong>bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</strong><br><br>`;
+        message += `1 BLOX = $0.10<br>`;
+        message += `Example: 0.001 BTC ≈ $70 → 700 BLOX`;
+      } else if (coin === "Ethereum") {
+        message = `Send Ethereum to:<br><strong>0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe</strong><br><br>`;
+        message += `1 BLOX = $0.10<br>`;
+        message += `Example: 0.05 ETH ≈ $100 → 1000 BLOX`;
       } else {
         message = `${coin} deposit selected! (Feature coming soon)`;
       }
       document.getElementById('cryptoResult').innerHTML = message;
+    }
+
+    function flip(choice) {
+      if (!loggedIn) {
+        document.getElementById('result').textContent = "Please log in first!";
+        return;
+      }
+
+      let outcome = Math.random() < 0.5 ? 'heads' : 'tails';
+      let message = 'You chose ' + choice + '. The outcome is ' + outcome + '.';
+      document.getElementById('result').textContent = message;
     }
   </script>
 </body>
