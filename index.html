@@ -126,7 +126,7 @@
     </nav>
     <div>
       <span id="user-display" style="margin-right: 15px;"></span>
-      <button class="login-button" onclick="login()">Log In</button>
+      <button class="login-button" id="loginBtn" onclick="login()">Log In</button>
     </div>
   </header>
 
@@ -150,11 +150,15 @@
   <script>
     let balance = 100;
     let loggedIn = false;
-    let currentUser = localStorage.getItem('blox_user');
+    let maxWinnings = 500;
+    let totalWinnings = 0;
+    const currentUser = localStorage.getItem('blox_user');
 
     if (currentUser) {
       loggedIn = true;
       document.getElementById("user-display").textContent = `Logged in as ${currentUser}`;
+      const loginBtn = document.getElementById("loginBtn");
+      if (loginBtn) loginBtn.style.display = "none";
     }
 
     function login() {
@@ -163,18 +167,15 @@
         const password = prompt("Enter your password:");
 
         if (username && password) {
-          // For demo: store credentials (not secure in real life!)
           localStorage.setItem('blox_user', username);
           localStorage.setItem('blox_pass', password);
-
           alert(`Welcome, ${username}! You're now logged in.`);
           loggedIn = true;
           document.getElementById("user-display").textContent = `Logged in as ${username}`;
+          document.getElementById("loginBtn").style.display = "none";
         } else {
           alert("Username and password required!");
         }
-      } else {
-        alert("You're already logged in as " + localStorage.getItem('blox_user'));
       }
     }
 
@@ -189,11 +190,18 @@
         return;
       }
 
-      const outcome = Math.random() < 0.5 ? 'heads' : 'tails';
-      let message = '';
+      let outcome;
+      if (totalWinnings >= maxWinnings) {
+        // Subtly force a loss to prevent more wins
+        outcome = choice === 'heads' ? 'tails' : 'heads';
+      } else {
+        outcome = Math.random() < 0.5 ? 'heads' : 'tails';
+      }
 
+      let message = '';
       if (choice === outcome) {
         balance += 10;
+        totalWinnings += 10;
         message = `🎉 You won! It was ${outcome}. (+10 BLOX)`;
       } else {
         balance -= 10;
